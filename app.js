@@ -6,7 +6,14 @@ try {
 } catch {
   localStorage.removeItem("nexus-progress");
 }
-const state = saved || { page: "dashboard", xp: 0, solved: 0, streak: 0, done: false, courses: {}, course: 0 };
+const defaults = { page: "dashboard", xp: 0, solved: 0, streak: 0, done: false, courses: {}, course: 0 };
+const state = { ...defaults, ...(saved || {}) };
+if (!state.courses || typeof state.courses !== "object" || Array.isArray(state.courses)) state.courses = {};
+if (!Number.isFinite(Number(state.xp))) state.xp = 0;
+if (!Number.isFinite(Number(state.solved))) state.solved = 0;
+if (!Number.isFinite(Number(state.streak))) state.streak = 0;
+state.page = typeof state.page === "string" ? state.page : "dashboard";
+state.course = Number.isFinite(Number(state.course)) ? Number(state.course) : 0;
 
 function levelFromXp(xp) { return Math.floor(xp / 1000) + 1; }
 function coursePct(i) { return Number(state.courses[i] || 0); }
