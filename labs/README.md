@@ -10,7 +10,7 @@ docker compose up -d
 
 ## Local targets
 
-- Juice Shop: http://127.0.0.1:3000
+- Juice Shop: http://127.0.0.1:3011
 - WebGoat: http://127.0.0.1:8081/WebGoat/
 - WebWolf: http://127.0.0.1:9091/WebWolf/
 - DVWA: http://127.0.0.1:4280
