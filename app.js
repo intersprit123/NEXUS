@@ -61,7 +61,7 @@ function navButton(label, target, primary=false) {
 }
 function shell() {
   const nav = [
-    ["dashboard","⌂","Dashboard"],["learn","🎓","Learn"],["missions","🎯","Missions"],
+    ["dashboard","⌂","Dashboard"],["learn","🎓","Learn"],["workstation","🖥️","Workstation"],["missions","🎯","Missions"],
     ["testing","🧪","Testing"],["labs","🧪","Real Labs"],["terminal","💻","Terminal"],["tools","🧰","Toolkit"],
     ["ctf","🚩","CTF Arena"],["ai","🤖","Gemini AI"],["help","❓","Help"]
   ];
@@ -164,6 +164,15 @@ async function sendTestRequest() {
     responseView.textContent="HTTP "+data.status+" "+data.statusText+"\nTime: "+data.durationMs+" ms\nURL: "+data.url+"\n\nHeaders:\n"+JSON.stringify(data.headers,null,2)+"\n\nBody:\n"+data.body;
   }catch(e){status.textContent="OFFLINE";responseView.textContent="NEXUS testing API unavailable. Start npm start."}
 }
+function workstationPage() {
+  return '<div class="layout"><section class="card section"><div class="section-head"><div><h2>🖥️ NEXUS Workstation</h2><div class="muted">A real Kali Linux container for authorized work inside the NEXUS lab network.</div></div><span class="tag">ISOLATED</span></div>' +
+  '<div class="notice">This is not a fake terminal. The workstation is a real container. It is attached to the internal NEXUS lab network and has no direct public-network route.</div>' +
+  '<h3>Start the workstation</h3><div class="console">$ ./scripts/workstation.sh\n\n$ docker compose --profile workstation exec nexus-workstation bash\nroot@...:/workspace# nmap juice-shop\nroot@...:/workspace# curl http://juice-shop:3000/\nroot@...:/workspace# curl http://webgoat:8080/WebGoat/\nroot@...:/workspace# curl http://dvwa/</div>' +
+  '<div class="actions"><button class="btn primary" data-workstation-copy="docker compose --profile workstation exec nexus-workstation bash">Copy shell command</button><button class="btn" data-page="testing">Open HTTP Tester</button><button class="btn" data-page="labs">Open Labs</button></div>' +
+  '</section><section class="card section"><div class="section-head"><h2>🧰 Included tools</h2></div>' +
+  '<div class="tool-grid">'+["nmap","curl / wget","git","jq","python3","dnsutils","netcat","iproute2"].map(x=>'<div class="tool"><strong>'+x+'</strong><span class="muted">Installed in workstation image</span></div>').join("")+'</div>' +
+  '<div class="notice" style="margin-top:14px">Use Burp Suite from the host against the localhost lab ports (3011, 8081, 9091, 4280), or configure a proxy inside your authorized lab workflow.</div></section></div>';
+}
 function terminal() {
   return '<section class="card section"><div class="section-head"><div><h2>💻 NEXUS Terminal</h2><div class="muted">Simulated filesystem — your machine is untouched.</div></div></div>' +
     '<div id="console" class="console">$ whoami\nnexus\n$ ls\nlogs  evidence  tools  secrets\n$ _</div>' +
@@ -205,6 +214,7 @@ function page() {
     case "course": return courseView(state.course);
     case "missions": return missionsPage();
     case "testing": return testingPage();
+    case "workstation": return workstationPage();
     case "labs": return labsPage();
     case "terminal": return terminal();
     case "tools": return toolsPage();
@@ -236,6 +246,7 @@ async function aiSend() {
 function bind() {
   document.querySelectorAll("[data-page]").forEach(b=>b.onclick=()=>{state.page=b.dataset.page;render()});
   document.getElementById("reset")?.addEventListener("click",resetProgress);
+  document.querySelectorAll("[data-workstation-copy]").forEach(b=>b.onclick=async()=>{try{await navigator.clipboard.writeText(b.dataset.workstationCopy);const t=b.textContent;b.textContent="Copied ✓";setTimeout(()=>b.textContent=t,1200)}catch{}});
   document.querySelectorAll("[data-course]").forEach(b=>b.onclick=()=>{state.course=Number(b.dataset.course);state.page="course";render()});
   document.querySelectorAll("[data-module]").forEach(b=>b.onclick=()=>{
     const module=Number(b.dataset.module), idx=Number(state.course||0), current=coursePct(idx), needed=Math.floor(current/20);
