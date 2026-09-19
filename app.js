@@ -62,7 +62,7 @@ function navButton(label, target, primary=false) {
 function shell() {
   const nav = [
     ["dashboard","⌂","Dashboard"],["learn","🎓","Learn"],["missions","🎯","Missions"],
-    ["labs","🧪","Real Labs"],["terminal","💻","Terminal"],["tools","🧰","Toolkit"],
+    ["testing","🧪","Testing"],["labs","🧪","Real Labs"],["terminal","💻","Terminal"],["tools","🧰","Toolkit"],
     ["ctf","🚩","CTF Arena"],["ai","🤖","Gemini AI"],["help","❓","Help"]
   ];
   return '<div class="shell"><aside class="sidebar"><div class="brand"><div class="brand-mark">N</div>NEXUS</div><nav>' +
