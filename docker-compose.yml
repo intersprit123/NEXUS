@@ -37,3 +37,18 @@ services:
 
 volumes:
   dvwa-data:
+
+
+  nexus-workstation:
+    image: kalilinux/kali-rolling:latest
+    command: ["sleep","infinity"]
+    stdin_open: true
+    tty: true
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    networks:
+      - default
+    profiles:
+      - workstation
