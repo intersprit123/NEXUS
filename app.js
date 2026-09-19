@@ -1,4 +1,11 @@
-const saved = JSON.parse(localStorage.getItem("nexus-progress") || "null");
+let saved = null;
+try {
+  const raw = localStorage.getItem("nexus-progress");
+  saved = raw ? JSON.parse(raw) : null;
+  if (saved && (typeof saved !== "object" || Array.isArray(saved))) saved = null;
+} catch {
+  localStorage.removeItem("nexus-progress");
+}
 const state = saved || { page: "dashboard", xp: 0, solved: 0, streak: 0, done: false, courses: {}, course: 0 };
 
 function levelFromXp(xp) { return Math.floor(xp / 1000) + 1; }
@@ -224,3 +231,10 @@ function bind() {
 }
 function render(){document.getElementById("app").innerHTML=shell();bind()}
 render();
+
+window.addEventListener("error", (event) => {
+  const root = document.getElementById("app");
+  if (root && !root.innerHTML.trim()) {
+    root.innerHTML = '<section class="card section"><h2>⚠️ NEXUS failed to start</h2><p class="muted">Run <code>node --check app.js</code> in the NEXUS folder and check the browser console with F12 → Console.</p><p class="muted">Error: ' + String(event.message || "Unknown JavaScript error").replace(/[<>&]/g,"") + '</p></section>';
+  }
+});
