@@ -7,7 +7,7 @@
       "name": "OWASP Juice Shop",
       "category": "Web",
       "difficulty": "Beginner → Expert",
-      "url": "http://127.0.0.1:3000",
+      "url": "http://127.0.0.1:3011",
       "start": "docker compose up -d juice-shop",
       "source": "https://github.com/juice-shop/juice-shop",
       "license": "MIT"
