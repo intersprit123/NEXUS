@@ -49,7 +49,7 @@ function shell() {
   const nav = [
     ["dashboard","⌂","Dashboard"],["learn","🎓","Learn"],["missions","🎯","Missions"],
     ["labs","🧪","Real Labs"],["terminal","💻","Terminal"],["tools","🧰","Toolkit"],
-    ["ctf","🚩","CTF Arena"],["ai","🤖","Gemini AI"]
+    ["ctf","🚩","CTF Arena"],["ai","🤖","Gemini AI"],["help","❓","Help"]
   ];
   return '<div class="shell"><aside class="sidebar"><div class="brand"><div class="brand-mark">N</div>NEXUS</div><nav>' +
     nav.map(x => '<button class="nav-btn ' + (state.page===x[0] ? "active" : "") + '" data-page="' + x[0] + '">' + x[1] + '&nbsp; ' + x[2] + '</button>').join("") +
@@ -130,6 +130,22 @@ function challenge() {
 function ctf() {
   return '<section class="card challenge"><div class="eyebrow">🚩 DAILY CTF</div><h1>Broken Authentication</h1><p class="sub">Use a mission, collect the flag, and earn XP.</p><div class="notice">No CTF XP is preloaded. Start with 0.</div><div class="actions"><button class="btn primary" data-challenge="0">Start Challenge</button></div></section>';
 }
+function helpPage() {
+  const faqs = [
+    ["How do I start the real labs?","Run docker compose up -d from the NEXUS repo, then open Real Labs."],
+    ["Why does Gemini say ADD API KEY?","Copy .env.example to .env, add GEMINI_API_KEY, run npm install, then npm start."],
+    ["Where is my progress stored?","The MVP stores learner progress in your browser localStorage. It is not a server account yet."],
+    ["How do I start fresh?","Use Reset Progress in the left navigation. This removes the local NEXUS progress state."],
+    ["Can I use Burp Suite?","Yes. Point Burp at your own NEXUS localhost labs or another system you are explicitly authorized to test."],
+    ["Why don't HTB labs appear inside NEXUS?","NEXUS links to provider-owned platforms instead of copying their proprietary rooms, machines, flags, or walkthroughs."]
+  ];
+  return '<div class="layout"><section class="card section"><div class="section-head"><div><h2>❓ NEXUS Help Center</h2><div class="muted">Everything you need to get the platform running.</div></div><span class="tag">GUIDE</span></div>' +
+    '<div class="notice">Start here: <b>Learn</b> for courses, <b>Real Labs</b> for Docker targets, <b>Gemini AI</b> for tutoring, and <b>CTF Arena</b> for missions.</div>' +
+    faqs.map((q,i)=>'<div class="mission"><div><h3>'+String(i+1).padStart(2,"0")+' • '+q[0]+'</h3><div class="muted">'+q[1]+'</div></div></div>').join("") +
+    '</section><section class="card section"><div class="section-head"><h2>🛠️ Quick setup</h2></div>' +
+    '<div class="console">$ npm install\n$ cp .env.example .env\n$ npm start\n\nNEXUS → http://127.0.0.1:8787\n\n$ docker compose up -d\n\nJuice Shop → http://127.0.0.1:3000\nWebGoat → http://127.0.0.1:8081/WebGoat/\nDVWA → http://127.0.0.1:4280</div>' +
+    '<div class="actions">'+navButton("Open Learn","learn",true)+navButton("Open Real Labs","labs")+navButton("Open Gemini","ai")+'</div></section></div>';
+}
 function aiPage() {
   return '<section class="card section"><div class="section-head"><div><h2>🤖 Gemini Tutor</h2><div class="muted">Key remains server-side.</div></div><span id="aiStatus" class="tag">CHECKING</span></div><div class="notice">Ask for explanations, hints, study plans or help understanding output from your authorized local labs.</div><div id="chat" class="console" style="min-height:260px;margin-top:14px">NEXUS AI ready.\n</div><div class="command-row"><input id="aiInput" placeholder="Ask Gemini about your lesson or lab..."><button class="btn primary" id="aiRun">Send</button></div></section>';
 }
@@ -144,6 +160,7 @@ function page() {
     case "ctf": return ctf();
     case "challenge": return challenge();
     case "ai": return aiPage();
+    case "help": return helpPage();
     default: return dashboard();
   }
 }
