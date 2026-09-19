@@ -128,6 +128,42 @@ function labsPage() {
     external.map(x => '<div class="mission"><div><h3>' + x[0] + '</h3><div class="muted">External link — NEXUS does not mirror proprietary content.</div></div><a class="btn" href="' + x[1] + '" target="_blank" rel="noopener">Visit ↗</a></div>').join("") +
     '</section></div>';
 }
+function testingPage() {
+  return '<div class="layout"><section class="card section"><div class="section-head"><div><h2>🧪 NEXUS Testing</h2><div class="muted">Real HTTP requests against NEXUS local training targets.</div></div><span class="tag">LOCAL ONLY</span></div>' +
+  '<div class="notice">This tester can only reach NEXUS lab ports 3011, 8081, 9091 and 4280.</div>' +
+  '<div style="display:grid;grid-template-columns:110px 1fr;gap:10px;margin-top:14px"><select id="testMethod" class="btn"><option>GET</option><option>POST</option><option>PUT</option><option>PATCH</option><option>DELETE</option><option>HEAD</option><option>OPTIONS</option></select><input id="testUrl" value="http://127.0.0.1:3011" style="background:#09111d;border:1px solid var(--line);color:var(--text);padding:11px;border-radius:11px;outline:0"></div>' +
+  '<textarea id="testHeaders" rows="6" placeholder="Headers JSON, e.g. {&quot;Content-Type&quot;:&quot;application/json&quot;}" style="width:100%;margin-top:10px;background:#05080d;border:1px solid var(--line);color:var(--text);padding:12px;border-radius:11px;font-family:ui-monospace,monospace"></textarea>' +
+  '<textarea id="testBody" rows="7" placeholder="Request body (used for POST/PUT/PATCH/DELETE)" style="width:100%;margin-top:10px;background:#05080d;border:1px solid var(--line);color:var(--text);padding:12px;border-radius:11px;font-family:ui-monospace,monospace"></textarea>' +
+  '<div class="actions"><button class="btn primary" id="testSend">Send Request →</button><button class="btn" id="testClear">Clear</button></div>' +
+  '<div class="layout" style="margin-top:15px"><section><div class="section-head"><h2>Request</h2><span id="testMeta" class="muted">Not sent</span></div><div id="testRequestView" class="console" style="min-height:180px">$ ready</div></section><section><div class="section-head"><h2>Response</h2><span id="testStatus" class="tag">WAITING</span></div><div id="testResponseView" class="console" style="min-height:180px">No response yet.</div></section></div>' +
+  '</section><section class="card section"><div class="section-head"><h2>🎯 Targets</h2></div>' +
+  [['Juice Shop','http://127.0.0.1:3011'],['WebGoat','http://127.0.0.1:8081'],['WebWolf','http://127.0.0.1:9091'],['DVWA','http://127.0.0.1:4280']].map(x=>'<button class="btn" data-target="'+x[1]+'" style="width:100%;margin-top:9px;text-align:left"><b>'+x[0]+'</b><div class="muted">'+x[1]+'</div></button>').join('') +
+  '<div class="footer-note">Use Burp Suite alongside this page when you want to inspect the same authorized local traffic in Burp.</div></section></div>';
+}
+async function sendTestRequest() {
+  const method=document.getElementById("testMethod").value;
+  const url=document.getElementById("testUrl").value.trim();
+  const body=document.getElementById("testBody").value;
+  let headers={};
+  const raw=document.getElementById("testHeaders").value.trim();
+  if(raw){try{headers=JSON.parse(raw)}catch{document.getElementById("testResponseView").textContent="Invalid headers JSON.";return}}
+  const reqView=document.getElementById("testRequestView");
+  const responseView=document.getElementById("testResponseView");
+  const status=document.getElementById("testStatus");
+  const meta=document.getElementById("testMeta");
+  reqView.textContent=method+" "+url+"\n\n"+JSON.stringify(headers,null,2)+(body?"\n\n"+body:"");
+  status.textContent="SENDING";
+  try{
+    const start=performance.now();
+    const r=await fetch("/api/test/request",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({method,url,headers,body})});
+    const data=await r.json();
+    const ms=Math.round(performance.now()-start);
+    meta.textContent=ms+" ms";
+    if(!r.ok){status.textContent="ERROR";responseView.textContent=data.error||"Request failed";return}
+    status.textContent=data.status+" "+data.statusText;
+    responseView.textContent="HTTP "+data.status+" "+data.statusText+"\nTime: "+data.durationMs+" ms\nURL: "+data.url+"\n\nHeaders:\n"+JSON.stringify(data.headers,null,2)+"\n\nBody:\n"+data.body;
+  }catch(e){status.textContent="OFFLINE";responseView.textContent="NEXUS testing API unavailable. Start npm start."}
+}
 function terminal() {
   return '<section class="card section"><div class="section-head"><div><h2>💻 NEXUS Terminal</h2><div class="muted">Simulated filesystem — your machine is untouched.</div></div></div>' +
     '<div id="console" class="console">$ whoami\nnexus\n$ ls\nlogs  evidence  tools  secrets\n$ _</div>' +
@@ -168,6 +204,7 @@ function page() {
     case "learn": return learn();
     case "course": return courseView(state.course);
     case "missions": return missionsPage();
+    case "testing": return testingPage();
     case "labs": return labsPage();
     case "terminal": return terminal();
     case "tools": return toolsPage();
@@ -206,6 +243,10 @@ function bind() {
   });
   document.querySelectorAll("[data-challenge]").forEach(b=>b.onclick=()=>{state.page="challenge";render()});
   document.querySelectorAll("[data-tool]").forEach(b=>b.onclick=()=>{state.page="tools";render();document.getElementById("toolOut").innerHTML='<div class="notice">Selected: <b>'+b.dataset.tool+'</b>. Ready for an isolated analysis engine.</div>'});
+  document.querySelectorAll("[data-target]").forEach(b=>b.onclick=()=>{document.getElementById("testUrl").value=b.dataset.target});
+  document.getElementById("testSend")?.addEventListener("click",sendTestRequest);
+  document.getElementById("testClear")?.addEventListener("click",()=>{document.getElementById("testHeaders").value="";document.getElementById("testBody").value="";document.getElementById("testResponseView").textContent="No response yet.";document.getElementById("testStatus").textContent="WAITING";document.getElementById("testMeta").textContent="Not sent"});
+
   if(state.page==="challenge")document.querySelectorAll("[data-answer]").forEach(b=>b.onclick=()=>{
     const r=document.getElementById("result");
     if(b.dataset.answer==="admin"){
