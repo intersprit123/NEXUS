@@ -28,7 +28,7 @@ const courses = [
   ["🛡️","Blue Team / SOC","9 lessons","Detection, triage, incident response and hardening"]
 ];
 const labs = [
-  ["🛒","OWASP Juice Shop","Web • Beginner → Expert","http://127.0.0.1:3000"],
+  ["🛒","OWASP Juice Shop","Web • Beginner → Expert","http://127.0.0.1:3011"],
   ["🐐","OWASP WebGoat","Web • Beginner → Advanced","http://127.0.0.1:8081/WebGoat/"],
   ["💉","DVWA","Web • Beginner → Advanced","http://127.0.0.1:4280"]
 ];
@@ -143,7 +143,7 @@ function helpPage() {
     '<div class="notice">Start here: <b>Learn</b> for courses, <b>Real Labs</b> for Docker targets, <b>Gemini AI</b> for tutoring, and <b>CTF Arena</b> for missions.</div>' +
     faqs.map((q,i)=>'<div class="mission"><div><h3>'+String(i+1).padStart(2,"0")+' • '+q[0]+'</h3><div class="muted">'+q[1]+'</div></div></div>').join("") +
     '</section><section class="card section"><div class="section-head"><h2>🛠️ Quick setup</h2></div>' +
-    '<div class="console">$ npm install\n$ cp .env.example .env\n$ npm start\n\nNEXUS → http://127.0.0.1:8787\n\n$ docker compose up -d\n\nJuice Shop → http://127.0.0.1:3000\nWebGoat → http://127.0.0.1:8081/WebGoat/\nDVWA → http://127.0.0.1:4280</div>' +
+    '<div class="console">$ npm install\n$ cp .env.example .env\n$ npm start\n\nNEXUS → http://127.0.0.1:8787\n\n$ docker compose up -d\n\nJuice Shop → http://127.0.0.1:3011\nWebGoat → http://127.0.0.1:8081/WebGoat/\nDVWA → http://127.0.0.1:4280</div>' +
     '<div class="actions">'+navButton("Open Learn","learn",true)+navButton("Open Real Labs","labs")+navButton("Open Gemini","ai")+'</div></section></div>';
 }
 function aiPage() {
