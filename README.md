@@ -37,3 +37,34 @@ NEXUS links to provider-owned services such as Hack The Box, PortSwigger Web Sec
 - Never commit .env.
 - Keep GEMINI_API_KEY server-side.
 - Add authentication and rate limiting before making write/API actions public.
+
+
+## Real security workstation
+
+NEXUS includes an optional Kali Linux workstation container for authorized lab work.
+
+Build and start it:
+
+    ./scripts/workstation.sh
+
+Then enter the real shell:
+
+    docker compose --profile workstation exec nexus-workstation bash
+
+Inside the workstation, the vulnerable training services are reachable by their Docker service names:
+
+    nmap juice-shop
+    curl http://juice-shop:3000/
+    curl http://webgoat:8080/WebGoat/
+    curl http://dvwa/
+
+The workstation is attached to the internal NEXUS lab network. The lab services remain published to localhost on the host for browser/Burp use.
+
+For Burp Suite, run Burp on your Kali host and proxy traffic to the local NEXUS ports:
+
+    Juice Shop: 127.0.0.1:3011
+    WebGoat:    127.0.0.1:8081
+    WebWolf:    127.0.0.1:9091
+    DVWA:       127.0.0.1:4280
+
+The workstation is intended for authorized testing of these training targets, not arbitrary public systems.
