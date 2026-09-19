@@ -3,6 +3,8 @@ services:
     image: bkimminich/juice-shop:latest
     ports:
       - "127.0.0.1:3011:3000"
+    networks:
+      - nexus-lab
     restart: unless-stopped
 
   webgoat:
@@ -12,6 +14,8 @@ services:
       - "127.0.0.1:9091:9090"
     environment:
       TZ: Asia/Kolkata
+    networks:
+      - nexus-lab
     restart: unless-stopped
 
   dvwa:
@@ -22,6 +26,8 @@ services:
       DB_SERVER: dvwa-db
     ports:
       - "127.0.0.1:4280:80"
+    networks:
+      - nexus-lab
     restart: unless-stopped
 
   dvwa-db:
@@ -33,15 +39,9 @@ services:
       MYSQL_PASSWORD: p@ssw0rd
     volumes:
       - dvwa-data:/var/lib/mysql
+    networks:
+      - nexus-lab
     restart: unless-stopped
-
-volumes:
-  dvwa-data:
-
-networks:
-  nexus-lab:
-    internal: true
-
 
   nexus-workstation:
     build:
@@ -60,3 +60,10 @@ networks:
       - nexus-lab
     profiles:
       - workstation
+
+volumes:
+  dvwa-data:
+
+networks:
+  nexus-lab:
+    internal: true
