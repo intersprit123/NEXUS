@@ -38,17 +38,25 @@ services:
 volumes:
   dvwa-data:
 
+networks:
+  nexus-lab:
+    internal: true
+
 
   nexus-workstation:
-    image: kalilinux/kali-rolling:latest
+    build:
+      context: ./workstation
+      dockerfile: Dockerfile
     command: ["sleep","infinity"]
     stdin_open: true
     tty: true
     cap_drop:
       - ALL
+    cap_add:
+      - NET_RAW
     security_opt:
       - no-new-privileges:true
     networks:
-      - default
+      - nexus-lab
     profiles:
       - workstation
