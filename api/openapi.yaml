@@ -1,0 +1,58 @@
+openapi: 3.0.3
+info:
+  title: NEXUS API
+  version: 0.1.0
+  description: API contract for lab lifecycle, progress, flags, and future provider integrations.
+servers:
+  - url: http://127.0.0.1:8787
+paths:
+  /api/health:
+    get:
+      responses:
+        "200":
+          description: API is healthy
+  /api/labs:
+    get:
+      responses:
+        "200":
+          description: List available labs
+  /api/labs/{id}:
+    get:
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: {type: string}
+      responses:
+        "200":
+          description: Lab details
+  /api/labs/{id}/start:
+    post:
+      responses:
+        "202":
+          description: Lab start accepted
+  /api/labs/{id}/stop:
+    post:
+      responses:
+        "202":
+          description: Lab stop accepted
+  /api/progress:
+    get:
+      responses:
+        "200":
+          description: Current learner progress
+  /api/flags/verify:
+    post:
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [labId, flag]
+              properties:
+                labId: {type: string}
+                flag: {type: string}
+      responses:
+        "200":
+          description: Verification result
