@@ -123,7 +123,7 @@ function missionsPage() {
 function labsPage() {
   return '<div class="layout"><section class="card section"><div class="section-head"><div><h2>🧪 Real Labs</h2><div class="muted">Actual deliberately vulnerable apps running locally.</div></div><span class="tag">DOCKER</span></div>' +
     '<div class="notice">Start them with <code>docker compose up -d</code> from the repo.</div>' +
-    labs.map(l => '<div class="mission"><div><div style="font-size:24px">' + l[0] + '</div><span class="tag">' + l[2] + '</span><h3>' + l[1] + '</h3><div class="muted">' + l[3] + '</div></div><a class="btn primary" href="' + l[3] + '" target="_blank" rel="noopener">Launch ↗</a></div>').join("") +
+    labs.map(l => '<div class="mission"><div><div style="font-size:24px">' + l[0] + '</div><span class="tag">' + l[2] + '</span><h3>' + l[1] + '</h3><div class="muted">' + l[3] + '</div>' + (l[1]==="DVWA" ? '<div class="notice" style="margin-top:9px"><b>DVWA web login:</b> admin / password</div>' : '') + '</div><div class="actions"><a class="btn primary" href="' + l[3] + '" target="_blank" rel="noopener">Launch ↗</a>' + (l[1]==="DVWA" ? '<button class="btn" data-copy="admin\tpassword">Copy Login</button>' : '') + '</div></div>').join("") +
     '</section><section class="card section"><div class="section-head"><h2>🌍 External platforms</h2><span class="muted">Provider-owned</span></div>' +
     external.map(x => '<div class="mission"><div><h3>' + x[0] + '</h3><div class="muted">External link — NEXUS does not mirror proprietary content.</div></div><a class="btn" href="' + x[1] + '" target="_blank" rel="noopener">Visit ↗</a></div>').join("") +
     '</section></div>';
@@ -244,6 +244,7 @@ function bind() {
   document.querySelectorAll("[data-challenge]").forEach(b=>b.onclick=()=>{state.page="challenge";render()});
   document.querySelectorAll("[data-tool]").forEach(b=>b.onclick=()=>{state.page="tools";render();document.getElementById("toolOut").innerHTML='<div class="notice">Selected: <b>'+b.dataset.tool+'</b>. Ready for an isolated analysis engine.</div>'});
   document.querySelectorAll("[data-target]").forEach(b=>b.onclick=()=>{document.getElementById("testUrl").value=b.dataset.target});
+  document.querySelectorAll("[data-copy]").forEach(b=>b.onclick=async()=>{try{await navigator.clipboard.writeText(b.dataset.copy);const old=b.textContent;b.textContent="Copied ✓";setTimeout(()=>b.textContent=old,1200)}catch{alert("Copy failed — use admin / password")}});
   document.getElementById("testSend")?.addEventListener("click",sendTestRequest);
   document.getElementById("testClear")?.addEventListener("click",()=>{document.getElementById("testHeaders").value="";document.getElementById("testBody").value="";document.getElementById("testResponseView").textContent="No response yet.";document.getElementById("testStatus").textContent="WAITING";document.getElementById("testMeta").textContent="Not sent"});
 
