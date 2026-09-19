@@ -54,6 +54,6 @@ app.post("/api/ai/chat",async(req,res)=>{
   }
 });
 
-app.get("*",(_req,res)=>res.sendFile(path.join(root,"index.html")));
+app.get(/.*/,_req=>res.sendFile(path.join(root,"index.html")));
 
 app.listen(port,()=>console.log("NEXUS running at http://127.0.0.1:"+port));
