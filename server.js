@@ -109,4 +109,4 @@ app.post("/api/test/request",async(req,res)=>{
 
 app.get(/.*/,_req=>res.sendFile(path.join(root,"index.html")));
 
-app.listen(port,()=>console.log("NEXUS running at http://127.0.0.1:"+port));
+app.listen(port,"0.0.0.0",()=>console.log("NEXUS running on port "+port));
