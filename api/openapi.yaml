@@ -11,6 +11,31 @@ paths:
       responses:
         "200":
           description: API is healthy
+  /api/test/targets:
+    get:
+      responses:
+        "200":
+          description: Allowlisted local training targets
+  /api/test/request:
+    post:
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [method, url]
+              properties:
+                method: {type: string}
+                url: {type: string}
+                headers: {type: object}
+                body: {type: string}
+      responses:
+        "200": {description: Real lab HTTP response}
+        "400": {description: Invalid HTTP method or request}
+        "403": {description: Target outside the NEXUS local-lab allowlist}
+        "413": {description: Request body too large}
+        "502": {description: Lab target unavailable or request failed}
   /api/labs:
     get:
       responses:
