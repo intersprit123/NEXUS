@@ -1,0 +1,59 @@
+{
+  "version": 1,
+  "policy": "Only original content or projects whose licenses/terms permit the selected integration method are embedded. Commercial platforms are linked, not copied.",
+  "localLabs": [
+    {
+      "id": "juice-shop",
+      "name": "OWASP Juice Shop",
+      "category": "Web",
+      "difficulty": "Beginner → Expert",
+      "url": "http://127.0.0.1:3000",
+      "start": "docker compose up -d juice-shop",
+      "source": "https://github.com/juice-shop/juice-shop",
+      "license": "MIT"
+    },
+    {
+      "id": "webgoat",
+      "name": "OWASP WebGoat",
+      "category": "Web",
+      "difficulty": "Beginner → Advanced",
+      "url": "http://127.0.0.1:8081/WebGoat/",
+      "start": "docker compose up -d webgoat",
+      "source": "https://github.com/WebGoat/WebGoat",
+      "license": "See upstream LICENSE"
+    },
+    {
+      "id": "dvwa",
+      "name": "DVWA",
+      "category": "Web",
+      "difficulty": "Beginner → Advanced",
+      "url": "http://127.0.0.1:4280",
+      "start": "docker compose up -d dvwa dvwa-db",
+      "source": "https://github.com/digininja/DVWA",
+      "license": "GPL-3.0"
+    }
+  ],
+  "externalPlatforms": [
+    {
+      "id": "hack-the-box",
+      "name": "Hack The Box",
+      "category": "Labs / CTF",
+      "url": "https://www.hackthebox.com/",
+      "mode": "external"
+    },
+    {
+      "id": "portswigger-wsa",
+      "name": "PortSwigger Web Security Academy",
+      "category": "Web Security",
+      "url": "https://portswigger.net/web-security",
+      "mode": "external"
+    },
+    {
+      "id": "tryhackme",
+      "name": "TryHackMe",
+      "category": "Learning / CTF",
+      "url": "https://tryhackme.com/",
+      "mode": "external"
+    }
+  ]
+}
